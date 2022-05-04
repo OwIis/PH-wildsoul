@@ -1,0 +1,546 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+   <head>
+       <meta charset="UTF-8">
+       <meta http-equiv="X-UA-Compatible" content="IE=edge">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>scroll</title>
+        <!-- fontawesome cdn-->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
+        <!-- swiper css cdn -->
+		<link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css"/>
+        <link rel="stylesheet" href="css/wildsoul.css">
+        <!-- swiper js cdn -->
+		<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+
+        <!------------------- 스크롤이벤트-강사님 ------------------->
+        <script type="text/javascript" 
+        src="//ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js">
+        </script>
+        <script type="text/javascript" src="jquery.simplyscroll.js"></script>
+        <link rel="stylesheet" href="jquery.simplyscroll.css" media="all" 
+        type="text/css">
+
+        <!-- 아래는 마우스 커서이벤트를 위한 추가 cnd -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+
+        <style> /* horiszon slide*/
+            li > img{
+                width: 200px;
+            }
+
+            .simply-scroll-container{
+                position: relative;
+
+                width: 576px;
+                height: 200px;
+                margin-bottom: 1em;
+            }
+            .simply-scroll-clip{
+                position: relative;
+                overflow: hidden;
+
+                width: 576px;
+                height: 200px;
+            }
+
+            .simply-scroll-list{
+                overflow: hidden;
+                margin: 0;
+                padding: 0;
+                list-style: none;
+
+                width: 2000px;
+                background-color: beige;
+            }
+            .simply-scroll-list li {
+                padding: 0;
+                margin: 0;
+                list-style: none;
+
+                float: left;
+                width: 290px;
+                height: 200px;
+            }
+            .simply-scroll-list li img{
+                border: none;
+                display: block;
+            }
+
+
+            .shopbtn{
+                position: relative;
+                overflow: hidden;
+            }
+            .shopbtn > div {
+                width: 500px;
+            }
+            .shopbtn > div > div{     
+                display: inline-block;  
+                margin-right:50px;
+            }
+            .shopbtn:hover> div > div{
+                animation: rollshop 3s infinite linear;
+            }
+            @keyframes rollshop{
+                0%{
+                    transform: translateX(0px);
+                }
+                100%{
+                    transform: translateX(250px);
+                }
+            }
+        </style>
+
+        <style> /* mouse hover*/
+            header, body{
+                position: relative;
+            }
+            .cover{}
+            .cover > img{
+                position: absolute;
+                transform: translateX(-500px);
+                transition: .2s;
+                width: 80px;
+                vertical-align: top;
+            }
+            .cover > img.on{
+                transform : translateX(0);
+            }
+
+
+
+            /* 호버기능을 이용한 커서img 넣기 */
+            /* header{
+                transition: 1s;
+            }
+            header:hover{
+                cursor: url(images/hovereye.png) 20 20, auto;
+                transition: 1s
+            } */
+
+
+            /* github참고해서 커서이벤트 css */
+            .cursor{
+                position:absolute;
+                background-color: red;
+                width: 8px;
+                height: 8px;
+                border-radius: 100%;
+                z-index: 5;
+                transition: 0.5s cubic-bezier(0.075, 0.82, 0.165, 1) transform,
+                0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
+                user-select: none;
+                pointer-events: none;
+                transform: scale(0.8);
+            }
+            .cursor::before{
+                content:'';
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
+                background-image: url("images/hovereye.png");
+                background-size: cover;
+                background-repeat: no-repeat;
+                border-radius: 100%;
+                opacity: 0;
+            }
+            .cursor.active{
+                opacity: 1;
+                transform: scale(12)
+            }
+            .cursor:active::before{
+                opacity: 1;
+            }
+
+            .cursor-follower{
+                position: absolute;
+                background-color: rgba(0,255,0,0.2);
+                width: 40px;
+                height: 40px;
+                border-radius: 100%;
+                z-index: 1;
+                transition: 0.6s cubic-bezier(0.075, 0.82, 0.165, 1) transform,
+                0.4 cubic-bezier(0.075, 0.82, 0.165, 1);
+                user-select: none;
+                pointer-events: none;
+                transform: translate(4px, 4px);
+            }
+            .cursor-follower:active{
+                opacity: 0.3;
+                transform: scale(0);
+            }
+
+            #wrapper{
+                width: 100%;
+                height: 100vh;
+                background: darkcyan;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .portfolio-thumb {
+                overflow: hidden;
+                transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+            }
+            .portfolio-thumb img{ 
+                max-width: 300px;
+                opacity: 0.8;
+                transition: all 0.5s cubic-bezier(0.075, 0.82, 0.165, 1);
+                transform-origin: 90% center;
+            }
+            .portfolio-item:hover .portfolio-thumb{
+                transform: translateX(-1.75rem);
+            }
+            .portfolio-item:hover .portfolio-thumb img{
+                opacity: 0.8;
+                transform: scale(1.5);
+            }
+
+            label{
+                width: 20px;
+                height: 20px;
+                border: 1px solid;
+                display: inline-block;
+            }
+            input#cb{
+                border: 1px solid pink
+            }
+            input#cb:checked + label{
+                border: 2px solid red !important;
+                background-color: blue !important;
+            }
+
+        </style>
+
+        <script>
+
+            $(function(){
+                $.noConflict();
+
+                //$("#scroller").simplyScroll();
+
+                // //--mousehover찾기
+                // $('header').hover(function() {
+                //     $(".cover > img").addClass("on");
+                // }, function(){
+                //     $(".cover > img").removeClass("on")
+                // });
+
+                // $("header").mousemove(function(e){
+                //     console.log(e.offsetX + " : " + e.offsetY);
+                //     $(".cover > img").css({
+                //         // transform : translateX(0),
+                //         top: e.offsetY + "px",
+                //         left: e.offsetX + "px",
+                //     })
+                // })
+
+
+
+                //--------------깃허브표 커서이벤트찾기
+                var cursor = $(".cursor"),
+                    follower = $(".cursor-follower");
+
+                var posX = 0, posY = 0, mouseX = 0, mouseY = 0;
+
+                TweenMax.to({},  0.016, {  
+                    repeat: -1, //1이 default -1은 무한반복. delay가 같이 쓰일경우 가장 처음만 delay 적용됨. 반복시키면서 dealy를 적용시킬려면 repeatDelay
+                    onRepeat: function() {
+                        posX += (mouseX - posX) / 9;
+                        posY += (mouseY - posY) / 9;
+
+                        TweenMax.set(follower,{
+                            css:{
+                                left: posX - 20,
+                                top: posY - 20,
+                            }
+                        });
+
+                        TweenMax.set(cursor, {
+                            css: {
+                                left: mouseX,
+                                top: mouseY
+                            }
+                        });
+                    }
+                });
+                //tweenmax.to는 트윈맥스값을 최종을 보여주고 시작지점을 보여주는 것은.from(target, duration, {vars})이다.
+                //.staggerForm(target, duration, {vars})은 배열속성으로 지정된 시간만큼 작동시킨다. 
+
+                $(document).on("mousemove", function(e){
+                    mouseX = e.pageX;
+                    mouseY = e.pageY;
+                });
+                
+                $(".portfolio-item img").on("mouseenter", function(){
+                    cursor.addClass("active");
+                    follower.addClass("active");
+                });
+                $(".portfolio-item img").on("mouseleave", function(){
+                    cursor.removeClass("active");
+                    follower.removeClass("active");
+                });
+            })
+
+
+
+        </script>
+    </head>
+    <body>
+        <!-- --------------커서이벤트--------------- -->
+        <div class="cursor"></div>
+        <div class="cursor-follower"></div> 
+        <div id="wrapper">
+            <div class="portfolio-item">
+                <div class="portfolio-thumb">
+                    <img src="images/AnyConv.com__AlmondButter.jpg">
+                </div>
+                
+            </div>
+        </div>
+        <script>
+           
+        </script>
+        <!-- --------------커서이벤트 끝--------------- -->
+        <hr>
+
+
+        <ul id="scroller" class="simply-scroll-list">
+            <li><img src="images/halva_party_01-1-620x753.jpg"></li>
+            <li><img src="images/halva_party_02-620x753.jpg"></li>
+            <li><img src="images/halva_party_03-620x753.jpg"></li>
+            <li><img src="images/amigdalovoutiro-800x880_2_11zon.png"></li>
+            <li><img src="images/fistikovoutiro-1-800x880_6_11zon.png"></li>
+            <li><img src="images/fountoukovoutiro_kakao_xourma-1-800x904_5_11zon.png"></li>
+        </ul>
+        <hr>
+        <h1>mousehover test</h1>
+        <div class="cover">
+            <img src="images/hovereye.png"><span></span>
+        </div>
+
+
+
+
+        <!-------- 갈색~주황배경 -------->
+        <div class="conts-wrap1">
+            <div class="wrap1-conts1">
+                <div class="top clearfix">
+                    <div class="roll-circle">
+                        <h1>No</h1>
+                        <p class="rolling">PRESERVATIVES ◆ GLUGEN ◆ PALM OIL ◆ SUGAR ◆ </p>
+                    </div>
+                    <div class="top-title">
+                        <h1>Wildly Loved</h1>
+                        <p>You will find our wild products in their simplest form. No additives<br>or anything else can spoil their nature</p>
+                    </div>
+                </div>
+                <div class="products-swiper">
+                    <!-- Slider main container -->
+                    <div class="swiper">
+                        <!-- Additional required wrapper -->
+                        <div class="swiper-wrapper">
+                            <!-- Slides -->
+                            <div class="swiper-slide">
+                                <div class="ver-cylind">
+                                    <img id="prdt-img" src="images/taxini_kakoa_meli-800x880_7_11zon.png" alt="Tahini with Cocoa & Honey">
+                                </div>
+                                <div>
+                                    <h3 id="prdt-name">Tahini with Cocoa & Honey</h3>
+                                    <p id="prdt-price">€5,90</p>
+                                    <div class="buybtn hor-cylind">BUY NOW!</div>
+                                </div>
+                                
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ver-cylind">
+                                    <img id="prdt-img" src="images/amigdalovoutiro-800x880_2_11zon.png" alt="">
+                                </div>
+                                <div>
+                                    <h3 id="prdt-name">The Wild Hazelnut Butter</h3>
+                                    <p id="prdt-price">€6,90</p>
+                                    <div class="buybtn hor-cylind">BUY NOW!</div>
+                                </div>
+                                
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ver-cylind">
+                                    <img id="prdt-img" src="images/taxini_sisami-800x880_1_11zon.png" alt="Tahini with Cocoa & Honey">
+                                </div>
+                                <div>
+                                    <h3 id="prdt-name">The Wild Tahini</h3>
+                                    <p id="prdt-price">€4,90</p>
+                                    <div class="buybtn hor-cylind">BUY NOW!</div>
+                                </div>
+                                
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ver-cylind">
+                                    <img id="prdt-img" src="images/kasious-800x880_9_11zon.png" alt="Tahini with Cocoa & Honey">
+                                </div>
+                                <div>
+                                    <h3 id="prdt-name">The Wild Cashew Butter</h3>
+                                    <p id="prdt-price">€6,90</p>
+                                    <div class="buybtn hor-cylind">BUY NOW!</div>
+                                </div>
+                                
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ver-cylind">
+                                    <img id="prdt-img" src="images/taxini_kakoa_meli-800x880_7_11zon.png" alt="Tahini with Cocoa & Honey">
+                                </div>
+                                <div>
+                                    <h3 id="prdt-name">Tahini with Honey</h3>
+                                    <p id="prdt-price">€5,90</p>
+                                    <div class="buybtn hor-cylind">BUY NOW!</div>
+                                </div>
+                                
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ver-cylind">
+                                    <img id="prdt-img" src="images/taxini_futikes-ines-800x880_11_11zon.png" alt="Tahini with Cocoa & Honey">
+                                </div>
+                                <div>
+                                    <h3 id="prdt-name">High Fiber Tahini</h3>
+                                    <p id="prdt-price">€5,90</p>
+                                    <div class="buybtn hor-cylind">BUY NOW!</div>
+                                </div>
+                                
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ver-cylind">
+                                    <img id="prdt-img" src="images/amigdalovoutiro-800x880_2_11zon.png" alt="Tahini with Cocoa & Honey">
+                                </div>
+                                <div>
+                                    <h3 id="prdt-name">The Wild Almond Butter</h3>
+                                    <p id="prdt-price">€6,90</p>
+                                    <div class="buybtn hor-cylind">BUY NOW!</div>
+                                </div>
+                                
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ver-cylind">
+                                    <img id="prdt-img" src="images/taxini_protein-800x880_3_11zon.png" alt="Tahini with Cocoa & Honey">
+                                </div>
+                                <div>
+                                    <h3 id="prdt-name">High Protein Tahini</h3>
+                                    <p id="prdt-price">€5,90</p>
+                                    <div class="buybtn hor-cylind">BUY NOW!</div>
+                                </div>
+                                
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ver-cylind">
+                                    <img id="prdt-img" src="images/taxini_chia-800x880_4_11zon.png" alt="Tahini with Cocoa & Honey">
+                                </div>
+                                <div>
+                                    <h3 id="prdt-name">Tahini with Chia Seeds</h3>
+                                    <p id="prdt-price">€5,90</p>
+                                    <div class="buybtn hor-cylind">BUY NOW!</div>
+                                </div>
+                                
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ver-cylind">
+                                    <img id="prdt-img" src="images/fountoukovoutiro_kakao_xourma-1-800x904_5_11zon.png" alt="Tahini with Cocoa & Honey">
+                                </div>
+                                <div>
+                                    <h3 id="prdt-name">Hazelnut Butter Crunchy with Cocoa & Date</h3>
+                                    <p id="prdt-price">€7,90</p>
+                                    <div class="buybtn hor-cylind">BUY NOW!</div>
+                                </div>
+                                
+                            </div>
+                            <div class="swiper-slide">
+                                <div class="ver-cylind">
+                                    <img id="prdt-img" src="images/fistikovoutiro-1-800x880_6_11zon.png" alt="Tahini with Cocoa & Honey">
+                                </div>
+                                <div>
+                                    <h3 id="prdt-name">The Wild Peanut Butter</h3>
+                                    <p id="prdt-price">€4,90</p>
+                                    <div class="buybtn hor-cylind">BUY NOW!</div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="empty1"></div>
+            <div class="wrap1-conts2 clearfix">
+                <div class="halva">
+                    <h1>We are in<br>love with<br>Halva</h1>
+                    <div class="hor-cylind">OUR HALVAS!</div>
+                </div>
+                <div class="party-cards"><img id="firstcard" src="images/halva_party_01-1-620x753.jpg" alt="party image 1"><img id="secondcard" src="images/halva_party_02-620x753.jpg" alt="party image 2"><img id="thirdcard" src="images/halva_party_03-620x753.jpg" alt="party image 3"></div>
+            </div>
+            <div class="empty2"></div>
+            <div class="wrap1-conts3 clearfix">
+                <div class="wildnut">
+                    <h1>Wild like a <br>Nut??</h1>
+                    <div class="section clearfix">
+                        <div>
+                            <h3>Roasted<br>Almond</h3>
+                            <p>All the treasures are hidden in a<br>chest. Respectively, our<br>treasures are enclosed in their<br>Wild shell.</p>
+                            <p>250G | 5,00€</p>
+                            <div class="hor-cylind">TASTE IT!</div>
+                        </div>
+                        <div>
+                            <img id="almond" src="images/almond-291x360_11zon.png" alt="almond"><img id="hand" src="images/hand.svg" alt="piece"></div>
+                    </div>
+                </div>
+                <div class="nut-list">
+                    <p>DISCOVER OUR<br>PRODUCTS THROUGH THE<br>5 TREASURES OF<br>NATURE!</p>
+                    <ul>
+                       <li><h3>Sesame<SUP>19</SUP></h3></li> 
+                       <li><h3>Peanut<SUP>5</SUP></h3></li> 
+                       <li><h3>Almond<SUP>9</SUP></h3></li> 
+                       <li><h3>Hazelnut<SUP>6</SUP></h3></li> 
+                       <li><h3>Cashew<SUP>4</SUP></h3></li> 
+                    </ul>
+                </div>
+            </div> -->
+        </div>
+        
+        <!-------- 연보라배경 -------->
+        <!-- <div class="conts-wrap2">
+            
+            <div class=" wrap2-conts1 clearfix">
+                <div>
+                    <img src="images/lips.svg" alt="lip"><h5>POPANGADA</h5>
+                    <p>A different shop in the center of Athens grinds<br>fruit, offers butter made from just one<br>ingredient, and halva flavors that confirm that<br>healthy can be delicious.</p>
+                </div>
+                <p class="center-txt">WORDS<br>FROM THE<br>SOUL!</p>
+                <div>
+                    <img src="images/lips.svg" alt="lip"><h5>ATHENS VOICE</h5>
+                    <p>Wild Souls works mainly with sesame and nut<br>products (pistachio, hazelnut, almond,<br>cashews), creating hellish spreads that you<br>want to swallow with the jar.</p>
+                </div>
+            </div>
+            <div class="wrap2-conts2 clearfix">
+                <div>
+                    <img src="images/lips.svg" alt="lip">
+                    <h5>LIFO</h5>
+                    <p>She let me try a piece of halva so pure and<br>delicious that I have never tasted anything like<br>it.</p>
+                </div>
+                <p class="center-txt">WORDS<br>FROM THE<br>SOUL!</p>
+                <div>
+                    <img src="images/lips.svg" alt="lip">
+                    <h5>THE GREEK FOUNDATION</h5>
+                    <p>Inspired by the unprocessed, pure and plant-<br>based food, vegetables and nuts that has to<br>offer, this new urban gem not only will boost<br>our bodies but also will feed our souls.</p>
+                </div>
+            </div>
+            
+            <div class="purplebtn">○</div>
+            <div class="purplebtn">○</div>
+
+        </div> -->
+        <label for="cb"></label>
+        <input id="cb" type="checkbox">
+    </body>
+   
+</html>
